@@ -249,9 +249,9 @@ option('status-unit-format-default', type : 'combo',
 # option('time-epoch', type : 'integer', value : '-1',
 #        description : 'time epoch for time clients')
 #endif // 0
-option('system-uid-max', type : 'integer', value : '-1',
+option('system-uid-max', type : 'integer', value : '499',
        description : 'maximum system UID')
-option('system-gid-max', type : 'integer', value : '-1',
+option('system-gid-max', type : 'integer', value : '499',
        description : 'maximum system GID')
 #if 0 /// UNNEEDED by elogind
 # option('dynamic-uid-min', type : 'integer', value : 0x0000EF00,
