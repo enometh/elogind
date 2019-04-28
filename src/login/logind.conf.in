@@ -16,21 +16,28 @@
 
 [Login]
 #KillUserProcesses={{ "yes" if KILL_USER_PROCESSES else "no" }}
+KillUserProcesses=no
 #KillOnlyUsers=
 #KillExcludeUsers=root
 #InhibitDelayMaxSec=5
 #UserStopDelaySec=10
 #HandlePowerKey=poweroff
+HandlePowerKey=ignore
 #HandlePowerKeyLongPress=ignore
 #HandleRebootKey=reboot
 #HandleRebootKeyLongPress=poweroff
 #HandleSuspendKey=suspend
+HandleSuspendKey=ignore
 #HandleSuspendKeyLongPress=hibernate
 #HandleHibernateKey=hibernate
+HandleHibernateKey=ignore
 #HandleHibernateKeyLongPress=ignore
 #HandleLidSwitch=suspend
+HandleLidSwitch=ignore
 #HandleLidSwitchExternalPower=suspend
+HandleLidSwitchExternalPower=ignore
 #HandleLidSwitchDocked=ignore
+HandleLidSwitchDocked=ignore
 #PowerKeyIgnoreInhibited=no
 #SuspendKeyIgnoreInhibited=no
 #HibernateKeyIgnoreInhibited=no
@@ -42,6 +49,7 @@
 #RuntimeDirectorySize=10%
 #RuntimeDirectoryInodesMax=
 #RemoveIPC=yes
+RemoveIPC=no
 #InhibitorsMax=8192
 #SessionsMax=8192
 #StopIdleSessionSec=infinity

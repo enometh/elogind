@@ -302,9 +302,9 @@ option('system-alloc-uid-min', type : 'integer', value : 0,
        description : 'minimum system UID used when allocating')
 option('system-alloc-gid-min', type : 'integer', value : 0,
        description : 'minimum system GID used when allocating')
-option('system-uid-max', type : 'integer', value : 0,
+option('system-uid-max', type : 'integer', value : 499,
        description : 'maximum system UID')
-option('system-gid-max', type : 'integer', value : 0,
+option('system-gid-max', type : 'integer', value : 499,
        description : 'maximum system GID')
 #if 0 /// UNNEEDED by elogind
 # option('dynamic-uid-min', type : 'integer', value : 0x0000EF00,
