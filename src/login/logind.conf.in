@@ -16,16 +16,23 @@
 
 [Login]
 #KillUserProcesses=@KILL_USER_PROCESSES@
+KillUserProcesses=no
 #KillOnlyUsers=
 #KillExcludeUsers=root
 #InhibitDelayMaxSec=5
 #UserStopDelaySec=10
 #HandlePowerKey=poweroff
+HandlePowerKey=ignore
 #HandleSuspendKey=suspend
+HandleSuspendKey=ignore
 #HandleHibernateKey=hibernate
+HandleHibernateKey=ignore
 #HandleLidSwitch=suspend
+HandleLidSwitch=ignore
 #HandleLidSwitchExternalPower=suspend
+HandleLidSwitchExternalPower=ignore
 #HandleLidSwitchDocked=ignore
+HandleLidSwitchDocked=ignore
 #HandleRebootKey=reboot
 #PowerKeyIgnoreInhibited=no
 #SuspendKeyIgnoreInhibited=no
@@ -38,6 +45,7 @@
 #RuntimeDirectorySize=10%
 #RuntimeDirectoryInodes=400k
 #RemoveIPC=yes
+RemoveIPC=no
 #InhibitorsMax=8192
 #SessionsMax=8192
 
@@ -58,3 +66,4 @@
 #HybridSleepState=disk
 #HybridSleepMode=suspend platform shutdown
 #HibernateDelaySec=10800
+HibernateDelaySec=600
