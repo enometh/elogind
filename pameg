@@ -1,0 +1,1 @@
+-session optional pam_elogind.so debug
