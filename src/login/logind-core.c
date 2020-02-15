@@ -427,6 +427,7 @@ int manager_get_user_by_pid(Manager *m, pid_t pid, User **ret) {
         if ((r < 0) || (NULL == u)) {
                 r = manager_get_session_by_pid(m, pid, &s);
                 // If a session was found, ignore it if it is already closing.
+                if (s)
                 if ((r > 0) && (SESSION_CLOSING != session_get_state(s)))
                         u = s->user;
         }
