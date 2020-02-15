@@ -11,7 +11,8 @@
 
 ((nil . ((indent-tabs-mode . nil)
          (tab-width . 8)
-         (fill-column . 79)))
+         (fill-column . 79)
+         (vc-handled-backends Git)))
  (c-mode . ((fill-column . 119)
             (c-basic-offset . 8)
             (eval . (c-set-offset 'substatement-open 0))
