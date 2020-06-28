@@ -1,0 +1,4 @@
+[D-BUS Service]
+Name=bestiae.sedem.Sessio1
+Exec=/usr/local/bin/bestiae.sedem.Sessio1.py
+User=root
