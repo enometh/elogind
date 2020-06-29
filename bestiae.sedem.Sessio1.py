@@ -2,13 +2,10 @@
 #
 # Provide bestiae.sedem.Sessio1 on D-Bus.
 #
-import os
+import os,re,logging
 from gi.repository import GLib
 from pydbus import SessionBus, SystemBus
-import logging
 
-# dbus spawns us with an empty PATH
-os.putenv('PATH','/usr/bin:/bin:/usr/local/bin')
 logging.basicConfig(filename='/dev/shm/dbuslog',
 					filemode='w',
 					format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -16,9 +13,30 @@ logging.basicConfig(filename='/dev/shm/dbuslog',
 
 logging.info('logging initialized')
 
-start_cmd = "SHELL=/usr/bin/zsh HOME=/home/madhu USER=madhu /home/madhu/misc/seat/seat0 -u madhu -s pameg -v 9 /7/gtk/emacs/build-xt/src/emacs -Q --fg-daemon=/tmp/seat0 |& tee -a /dev/shm/dbuslog &"
+def get_dbus_address_from_file(path):
+	with  open(path, "r") as file:
+		for line in file:
+			match = re.search('DBUS_SESSION_BUS_ADDRESS=[\'"](.*)[\'"]', line)
+			if match:
+				return match.group(1)
+
+env_str = ''
+dbus_addr = get_dbus_address_from_file("/home/madhu/g:0")
+
+logging.info('DBUS_SESSION_BUS_ADDRESS to %s', dbus_addr)
+
+if dbus_addr:
+		env_str = format("%s DBUS_SESSION_BUS_ADDRESS='%s'" % (env_str, dbus_addr))
+env_str = env_str + " HOME=/home/madhu"
+env_str = env_str + " PATH=/usr/bin:/bin:/usr/local/bin"
+env_str = env_str + " USER=madhu"
+env_str = env_str + " SHELL=/bin/zsh"
+
+
+start_cmd = env_str + " /home/madhu/misc/seat/seat0 -u madhu -s pameg -v 9 /7/gtk/emacs/build-xt/src/emacs -Q --fg-daemon=/tmp/seat0 |& tee -a /dev/shm/dbuslog &"
 stop_cmd = "sudo -u madhu emacsclient -s /tmp/seat0 --eval '(kill-emacs)' |& tee -a /dev/shm/dbuslog"
 # attach to emacs with emacsclient -s /tmp/seat0 -t
+# dbus-send --system --dest=bestiae.sedem.Sessio1 --print-reply /bestiae/sedem/Sessio1 bestiae.sedem.Sessio1.Start
 
 class Sessio1(object):
 	"""
