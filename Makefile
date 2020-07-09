@@ -1,4 +1,10 @@
-all: fake-journal.so
+all: fake-journal.so a.out
+
+ELOGIND_CFLAGS=$(shell pkg-config --cflags libelogind)
+ELOGIND_LIBS=$(shell pkg-config --libs libelogind)
 
 fake-journal.so: fake-journal.c
-	gcc -shared -fPIC  fake-journal.c -o fake-journal.so -ldl -ggdb
+	$(CC) -ggdb -shared -fPIC -ldl -o $@ $< $(ELOGIND_CFLAGS)
+
+a.out: test.c
+	$(CC) -ggdb -o $@ $? $(ELOGIND_LIBS) $(ELOGIND_CFLAGS)
