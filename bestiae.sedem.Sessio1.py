@@ -39,6 +39,7 @@ env_str = env_str + " PATH=/usr/bin:/bin:/usr/local/bin"
 env_str = env_str + " USER=madhu"
 env_str = env_str + " SHELL=/bin/zsh"
 env_str = env_str + " XDG_RUNTIME_DIR=/dev/shm/madhu"
+env_str = env_str + " LOGNAME=madhu"
 
 # ;madhu 200703 dbus sets
 #DBUS_STARTER_ADDRESS='unix:path=/run/dbus/system_bus_socket'
@@ -58,6 +59,9 @@ unsetenv("DBUS_STARTER_BUS_TYPE")
 
 start_cmd = env_str + " /home/madhu/misc/seat/seat0 -u madhu -s pameg -v 9 /7/gtk/emacs/build-xt/src/emacs -Q --fg-daemon=/tmp/seat0 |& tee -a /dev/shm/dbuslog &"
 stop_cmd = "sudo -u madhu emacsclient -s /tmp/seat0 --eval '(kill-emacs)' |& tee -a /dev/shm/dbuslog"
+
+start_cmd = env_str + " /home/madhu/misc/seat/seat0 -u madhu -s pameg -v 9 /usr/local/bin/screen -S foo -m -D&"
+stop_cmd = "sudo fuser -k /home/madhu/.screen/*.foo"
 
 # NOTES:
 # attach to emacs with emacsclient -s /tmp/seat0 -t
