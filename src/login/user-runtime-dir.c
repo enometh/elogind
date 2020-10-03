@@ -187,7 +187,6 @@ static int do_umount(const char *user) {
 #else // 0
 static int do_umount(const char *runtime_path) {
 #endif // 0
-
         log_debug("Will remove %s", runtime_path);
         return user_remove_runtime_path(runtime_path);
 }
@@ -230,10 +229,31 @@ int user_runtime_dir(const char *verb, User *u) {
         assert_not_reached("Unknown verb!");
 #else // 0
         if (streq(verb, "start"))
-                r = do_mount(u->runtime_path, u->manager->runtime_dir_size, u->manager->runtime_dir_inodes,
-                             u->user_record->uid, u->user_record->gid);
+                if (!u->manager->remove_ipc) {
+                        assert(u->runtime_path);
+                        assert(path_is_absolute(u->runtime_path));
+                        assert(uid_is_valid(u->user_record->uid));
+                        assert(gid_is_valid(u->user_record->gid));
+                        r = mkdir_safe_label("/run/user", 0755, 0, 0, MKDIR_WARN_MODE);
+                        if (r < 0) {
+                                r = log_error_errno(r, "Failed to create /run/user: %m");
+                        }
+                        r = mkdir_label(u->runtime_path, 0700);
+                        if (r < 0) {
+                                r = log_error_errno(r, "Failed to create %s: %m", u->runtime_path);
+                        }
+                        r = chmod_and_chown(u->runtime_path, 0700, u->user_record->uid, u->user_record->gid);
+                        if (r < 0) {
+                                r = log_error_errno(r, "Failed to change ownership and mode of \"%s\": %m", u->runtime_path);
+                        }
+                        (void) make_inaccessible_nodes(u->runtime_path, u->user_record->uid, u->user_record->gid);
+                }  else
+                        r = do_mount(u->runtime_path, u->manager->runtime_dir_size, u->manager->runtime_dir_inodes,
+                                     u->user_record->uid, u->user_record->gid);
         else if (streq(verb, "stop"))
-                r = do_umount(u->runtime_path);
+                if (!u->manager->remove_ipc) {
+                } else
+                        r = do_umount(u->runtime_path);
         else
                 assert_not_reached("Unknown verb!");
 
