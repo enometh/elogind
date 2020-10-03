@@ -711,7 +711,10 @@ Virtualization detect_container(void) {
                         if (r < 0)
                                 log_debug_errno(r, "Failed to read %s, ignoring: %m", pf);
                         else if (startswith(ptrace_comm, "proot")) {
-                                v = VIRTUALIZATION_PROOT;
+				log_info("ignoring bogus proot detection on debug kernel");
+				r = VIRTUALIZATION_NONE;
+				goto finish;
+                                r = VIRTUALIZATION_PROOT;
                                 goto finish;
                         }
                 }
