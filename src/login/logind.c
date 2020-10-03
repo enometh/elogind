@@ -1229,14 +1229,18 @@ static int run(int argc, char *const *argv) {
 #endif // ENABLE_DEBUG_ELOGIND
         log_setup_service();
 
+        extern bool daemonized;
+        if (!daemonized) {
         r = service_parse_argv("elogind.service",
                                "Manager for user logins and devices and privileged operations.",
                                BUS_IMPLEMENTATIONS(&manager_object,
                                                    &log_control_object),
                                argc, argv);
-        if (r <= 0)
+        if (r <= 0) {
+		log_info("service_parse_argv failed\n");
                 return r;
-
+	}
+        }
         umask(0022);
 
         r = mac_selinux_init();
