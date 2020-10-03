@@ -322,7 +322,7 @@ int elogind_setup_cgroups_agent(Manager *m) {
   * return = 0 on success, continue normal operation.
   * return > 0 if elogind is already running or forked, exit with success.
 **/
-int elogind_startup(int argc, char *argv[]) {
+int elogind_startup(int argc, char *const *argv) {
         bool  daemonize = false;
         pid_t pid;
         int   r         = 0;

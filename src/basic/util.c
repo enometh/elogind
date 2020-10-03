@@ -21,7 +21,7 @@
 #include "virt.h"
 
 int saved_argc = 0;
-char **saved_argv = NULL;
+char * const *saved_argv = NULL;
 #if 0 /// UNNEEDED by elogind
 static int saved_in_initrd = -1;
 #endif // 0

@@ -38,7 +38,7 @@ int service_parse_argv(
                 const char *service,
                 const char *description,
                 const BusObjectImplementation* const* bus_objects,
-                int argc, char *argv[]) {
+                int argc, char* const *argv) {
 
         enum {
                 ARG_VERSION = 0x100,
@@ -57,7 +57,7 @@ int service_parse_argv(
         assert(argc >= 0);
         assert(argv);
 
-        while ((c = getopt_long(argc, argv, "h", options, NULL)) >= 0)
+        while ((c = getopt_long(argc, (char **) argv, "h", options, NULL)) >= 0)
                 switch(c) {
 
                 case 'h':

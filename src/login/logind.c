@@ -1212,7 +1212,7 @@ static int manager_run(Manager *m) {
         }
 }
 
-static int run(int argc, char *argv[]) {
+static int run(int argc, char *const *argv) {
         _cleanup_(manager_unrefp) Manager *m = NULL;
         int r;
 

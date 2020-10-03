@@ -8,9 +8,9 @@
 #include "musl_missing.h"
 
 extern int saved_argc;
-extern char **saved_argv;
+extern char *const *saved_argv;
 
-static inline void save_argc_argv(int argc, char **argv) {
+static inline void save_argc_argv(int argc, char * const *argv) {
         saved_argc = argc;
         saved_argv = argv;
 }

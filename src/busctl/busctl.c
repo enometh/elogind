@@ -2339,7 +2339,7 @@ static int verb_help(int argc, char **argv, void *userdata) {
         return help();
 }
 
-static int parse_argv(int argc, char *argv[]) {
+static int parse_argv(int argc, char *const *argv) {
 
         enum {
                 ARG_VERSION = 0x100,
