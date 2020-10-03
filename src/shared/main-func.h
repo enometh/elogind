@@ -16,7 +16,7 @@
 #define ask_password_agent_close() while(0){}
 #endif // 1
 #define _DEFINE_MAIN_FUNCTION(intro, impl, ret)                         \
-        int main(int argc, char *argv[]) {                              \
+        int main(int argc, char *const *argv) {                              \
                 int r;                                                  \
                 save_argc_argv(argc, argv);                             \
                 intro;                                                  \

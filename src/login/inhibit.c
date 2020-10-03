@@ -271,7 +271,7 @@ static int parse_argv(int argc, char *argv[]) {
         return 1;
 }
 
-static int run(int argc, char *argv[]) {
+static int run(int argc, char *const *argv) {
         _cleanup_(sd_bus_flush_close_unrefp) sd_bus *bus = NULL;
         int r;
 
