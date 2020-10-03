@@ -219,7 +219,8 @@ int user_runtime_dir(const char *verb, User *u) {
 
 #endif // 0
 
-                return r;
+        //if (!umask(022))
+//                return r;
 
 #if 0 /// elogind has more information and can do this more conveniently
         if (streq(argv[1], "start"))
