@@ -486,6 +486,9 @@ int detect_container(void) {
                         _cleanup_free_ char *ptrace_comm = NULL;
                         r = read_one_line_file(pf, &ptrace_comm);
                         if (r >= 0 && startswith(ptrace_comm, "proot")) {
+				log_info("ignoring bogus proot detection on debug kernel");
+				r = VIRTUALIZATION_NONE;
+				goto finish;
                                 r = VIRTUALIZATION_PROOT;
                                 goto finish;
                         }
