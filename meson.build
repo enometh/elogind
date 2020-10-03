@@ -1816,7 +1816,7 @@ add_project_arguments('-include', 'config.h', language : 'c')
 
 generate_gperfs = find_program('tools/generate-gperfs.py')
 
-subdir('po')
+#subdir('po')
 #if 0 /// UNNEEDED by elogind
 # subdir('catalog')
 #endif // 0
