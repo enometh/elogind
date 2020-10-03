@@ -2269,7 +2269,7 @@ libelogind_includes = [basic_includes, include_directories(
 
 includes = [libelogind_includes, include_directories('src/shared')]
 
-subdir('po')
+#subdir('po')
 #if 0 /// UNNEEDED by elogind
 # subdir('catalog')
 #endif // 0
