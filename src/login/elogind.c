@@ -316,6 +316,7 @@ int elogind_setup_cgroups_agent(Manager *m) {
         return 0;
 }
 
+bool daemonized = false;
 
 /** Extra functionality at startup, exclusive to elogind
   * return < 0 on error, exit with failure.
@@ -369,6 +370,7 @@ int elogind_startup(int argc, char *const *argv) {
         }
 
         /* elogind allows to be daemonized using one argument "-D" / "--daemon" */
+        daemonized = daemonize;
         if (daemonize)
                 r = elogind_daemonize();
 
