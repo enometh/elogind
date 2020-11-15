@@ -85,23 +85,23 @@ void elogind_manager_reset_config(Manager* m) {
                 log_debug_elogind("suspend_modes[%d] = %s",
                                   dbg_cnt, m->suspend_modes[dbg_cnt]);
         dbg_cnt = -1;
-        while (m->suspend_states[++dbg_cnt])
+        while (m->suspend_states && m->suspend_states[++dbg_cnt])
                 log_debug_elogind("suspend_states[%d] = %s",
                                   dbg_cnt, m->suspend_states[dbg_cnt]);
         dbg_cnt = -1;
-        while (m->hibernate_modes[++dbg_cnt])
+        while (m->hibernate_modes && m->hibernate_modes[++dbg_cnt])
                 log_debug_elogind("hibernate_modes[%d] = %s",
                                   dbg_cnt, m->hibernate_modes[dbg_cnt]);
         dbg_cnt = -1;
-        while (m->hibernate_states[++dbg_cnt])
+        while (m->hibernate_states && m->hibernate_states[++dbg_cnt])
                 log_debug_elogind("hibernate_states[%d] = %s",
                                   dbg_cnt, m->hibernate_states[dbg_cnt]);
         dbg_cnt = -1;
-        while (m->hybrid_modes[++dbg_cnt])
+        while (m->hybrid_modes && m->hybrid_modes[++dbg_cnt])
                 log_debug_elogind("hybrid_modes[%d] = %s",
                                   dbg_cnt, m->hybrid_modes[dbg_cnt]);
         dbg_cnt = -1;
-        while (m->hybrid_states[++dbg_cnt])
+        while (m->hybrid_states && m->hybrid_states[++dbg_cnt])
                 log_debug_elogind("hybrid_states[%d] = %s",
                                   dbg_cnt, m->hybrid_states[dbg_cnt]);
         log_debug_elogind("hibernate_delay_sec: %lu seconds (%lu minutes)",
