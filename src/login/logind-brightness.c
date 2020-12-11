@@ -241,7 +241,7 @@ int manager_write_brightness(
         w->manager = m;
 
         r = set_add_message(&w->current_messages, message);
-        log_debug_elogind("Appending message to NEW writer %s", existing->path);
+        log_debug_elogind("Appending message to NEW writer %s", path);
         if (r < 0)
                 return log_error_errno(r, "Failed to add message to set: %m");
 
