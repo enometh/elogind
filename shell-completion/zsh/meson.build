@@ -40,6 +40,7 @@ if zshcompletiondir != 'no'
 #                  ['_timedatectl',              'ENABLE_TIMEDATED'],
 #else // 0
         items = [['_loginctl',            ''],
+                 ['_elogind-inhibit',            '']
 #endif // 0
                 ]
 
