@@ -1175,8 +1175,10 @@ found_atime:
 int session_set_idle_hint(Session *s, bool b) {
         assert(s);
 
-        if (!SESSION_TYPE_IS_GRAPHICAL(s->type))
-                return -ENOTTY;
+        if (!SESSION_TYPE_IS_GRAPHICAL(s->type)) {
+                log_debug_elogind("session_set_idle_hint: MADHU: faking for non-graphical session %s", s->id);
+                // return -ENOTTY;
+        }
 
         if (s->idle_hint == b)
                 return 0;
