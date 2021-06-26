@@ -1,0 +1,17 @@
+-*- Org -*-
+
+* fake-journal.so
+
+Intercept calls to =sd_journal_sendv= and send it to fd 1.
+
+* EOF
+#+BEGIN_EXAMPLE
+;;;
+;;;   Time-stamp: <>
+;;;   Touched: Thu Jul 9 17:38:01 2020 +0530 <enometh@net.meer>
+;;;   Bugs-To: enometh@net.meer
+;;;   Status: EXPERIMENTAL.  Do not redistribute
+;;;   Copyright (C) 2020-21 Madhu.  All Rights Reserved.
+;;;
+#+END_EXAMPLE
+
