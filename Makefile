@@ -17,3 +17,8 @@ clean:
 /usr/local/bin/bestiae.sedem.Sessio1.py: bestiae.sedem.Sessio1.py
 	cp -apfv $(PWD)/$< $@
 
+/etc/pam.d/pameg: pameg
+	cp -apfv $(PWD)/$< $@
+
+/usr/local/bin/seat0: seat0.c
+	gcc -D_GNU_SOURCE -Wall -std=c99 -lpam -o $@ $<
