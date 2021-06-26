@@ -5,9 +5,18 @@
 Intercept calls to =sd_journal_sendv= and send it to fd 1.
 
 If the system supports static constructors via
-=__attribute__((constructor))=, and If =FAKE_JOURNAL_FD= is the
+=__attribute__((constructor))=, and If =FAKE_JOURNAL_FD= is in the
 environment and =atoi= can produce a number, output is sent to that fd
 instead.
+
+
+#+BEGIN_SRC sh
+# e.g. if webkitgtk has beem compiled with USE_SYTEMD and links to
+# libelogind and writes RELEASE_LOG to syslog, you can send that
+# output to a file instead.
+exec 5>/dev/shm/wyeb-log
+(export FAKE_JOURNAL_FD=5 LD_PRELOAD=$(pwd)/fake_journal.so; wyeb)
+#+END_SRC
 
 
 * EOF
