@@ -274,14 +274,15 @@ fill_iovec_sprintf(const char *format, va_list ap, int extra, struct iovec **_io
     return r;
 }
 
+static int fakefd = 1;
 
 // BOGUS - it is a macro in sd-journal.h
 int
 sd_journal_sendv(const struct iovec *iov, int n) {
   /* send values seperated by newline */
   while (n-- > 0) {
-    writev(1, iov+n, 1);//
-    write(1,"\n", 1);
+    writev(fakefd, iov+n, 1);//
+    write(fakefd,"\n", 1);
   }
 }
 
@@ -457,6 +458,21 @@ finish:
 }
 
 
+// Thu Feb 27 20:39:50 2020 +0530
+void __attribute__((constructor)) static_constuctor() {
+//  printf("Now playing: fake-journal... ");
+  char *env_var = "FAKE_JOURNAL_FD";
+  char *fdstr = getenv(env_var);
+  if (fdstr) {
+    int fd = atoi(fdstr);
+    if (fd) {
+      fakefd = fd;
+    }
+  }
+//  printf(" REDIRECTING TO %d\n", fakefd);
+  fflush(stdout);
+//  _exit(0);
+}
 
 /*
 Compile:

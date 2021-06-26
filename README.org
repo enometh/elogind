@@ -1,8 +1,14 @@
--*- Org -*-
+#+COMMENT: -*- Org -*-
 
 * fake-journal.so
 
 Intercept calls to =sd_journal_sendv= and send it to fd 1.
+
+If the system supports static constructors via
+=__attribute__((constructor))=, and If =FAKE_JOURNAL_FD= is the
+environment and =atoi= can produce a number, output is sent to that fd
+instead.
+
 
 * EOF
 #+BEGIN_EXAMPLE
