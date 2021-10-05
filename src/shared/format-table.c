@@ -957,6 +957,7 @@ int table_add_many_internal(Table *t, TableDataType first_type, ...) {
                         buffer.address = *va_arg(ap, union in_addr_union *);
                         data = &buffer.address.in6;
                         break;
+#endif // 0
 
                 case TABLE_UUID:
                 case TABLE_ID128:
@@ -979,6 +980,7 @@ int table_add_many_internal(Table *t, TableDataType first_type, ...) {
                         data = &buffer.pid;
                         break;
 
+#if 0 /// UNNEEDED by elogind
                 case TABLE_SET_MINIMUM_WIDTH: {
                         size_t w = va_arg(ap, size_t);
 
