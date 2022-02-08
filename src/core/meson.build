@@ -243,9 +243,9 @@ libcore_sources = files(
 #              install_dir : dbussystemservicedir)
 #
 #endif // 0
+#if 1 /// some package sytems like portage might strip empty directories created for elogind
 meson.add_install_script('sh', '-c', mkdir_p.format(systemshutdowndir))
 meson.add_install_script('sh', '-c', mkdir_p.format(systemsleepdir))
-#if 1 /// some package systems like portage might strip empty directories created for elogind
 meson.add_install_script('sh', '-c', 'touch $DESTDIR@0@/.keep_dir'.format(systemshutdowndir))
 meson.add_install_script('sh', '-c', 'touch $DESTDIR@0@/.keep_dir'.format(systemsleepdir))
 #endif // 1
