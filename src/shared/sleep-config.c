@@ -156,6 +156,22 @@ int parse_sleep_config(SleepConfig **ret) {
         sc->hibernate_by_using = strv_free(sc->hibernate_by_using);
 #endif // 0
 
+        /* manager_parse_config_file already allocates strvs for sc->modes[i] and sc->states[i]. everytime
+           parse_sleep_config it reparses the confi file and adds to those strvs. to avoid endless leaks, free the
+           strvs allocated by manager_parse_config_file */
+
+        for (SleepOperation i = 0; i < _SLEEP_OPERATION_MAX; i++) {
+                if (sc->modes[i]) {
+                        strv_free(sc->modes[i]);
+                        sc->modes[i] = strv_new(STRV_IGNORE);
+                }
+
+                if (sc->states[i]) {
+                        strv_free(sc->states[i]);
+                        sc->states[i] = strv_new(STRV_IGNORE);
+                }
+        }
+
         const ConfigTableItem items[] = {
 #if 1 /// Additional options for elogind
                 { "Sleep", "AllowPowerOffInterrupts",     config_parse_bool, 0, &sc->allow_poweroff_interrupts },
@@ -202,13 +218,13 @@ int parse_sleep_config(SleepConfig **ret) {
                 : (allow_suspend != 0 && allow_hibernate != 0);
 
         for (SleepOperation i = 0; i < _SLEEP_OPERATION_CONFIG_MAX; i++) {
-                if (!sc->states[i] && sleep_default_state_table[i]) {
+                if ((!sc->states[i] || strv_length(sc->states[i]) == 0) && sleep_default_state_table[i]) {
                         sc->states[i] = strv_copy(sleep_default_state_table[i]);
                         if (!sc->states[i])
                                 return log_oom();
                 }
 
-                if (!sc->modes[i] && sleep_default_mode_table[i]) {
+                if ((!sc->modes[i] || strv_length(sc->modes[i]) == 0) && sleep_default_mode_table[i]) {
                         sc->modes[i] = strv_copy(sleep_default_mode_table[i]);
                         if (!sc->modes[i])
                                 return log_oom();
