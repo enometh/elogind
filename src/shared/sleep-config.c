@@ -77,6 +77,22 @@ int parse_sleep_config(SleepConfig **ret_sleep_config) {
                 return log_oom();
 #endif // 0
 
+        /* manager_parse_config_file already allocates strvs for sc->modes[i] and sc->states[i]. everytime
+           parse_sleep_config it reparses the confi file and adds to those strvs. to avoid endless leaks, free the
+           strvs allocated by manager_parse_config_file */
+
+        for (SleepOperation i = 0; i < _SLEEP_OPERATION_MAX; i++) {
+                if (sc->modes[i]) {
+                        strv_free(sc->modes[i]);
+                        sc->modes[i] = strv_new(STRV_IGNORE);
+                }
+
+                if (sc->states[i]) {
+                        strv_free(sc->states[i]);
+                        sc->states[i] = strv_new(STRV_IGNORE);
+                }
+        }
+
         const ConfigTableItem items[] = {
 #if 1 /// Additional options for elogind
                 { "Sleep", "AllowPowerOffInterrupts",     config_parse_bool, 0, &sc->allow_poweroff_interrupts },
@@ -136,15 +152,20 @@ int parse_sleep_config(SleepConfig **ret_sleep_config) {
         sc->allow[SLEEP_SUSPEND_THEN_HIBERNATE] = allow_s2h >= 0 ? allow_s2h
                 : (allow_suspend != 0 && allow_hibernate != 0);
 
-        if (!sc->states[SLEEP_SUSPEND])
+        if (!sc->states[SLEEP_SUSPEND] ||
+            strv_length(sc->states[SLEEP_SUSPEND]) == 0)
                 sc->states[SLEEP_SUSPEND] = strv_new("mem", "standby", "freeze");
-        if (!sc->modes[SLEEP_HIBERNATE])
+        if (!sc->modes[SLEEP_HIBERNATE] ||
+            strv_length(sc->modes[SLEEP_HIBERNATE]) == 0)
                 sc->modes[SLEEP_HIBERNATE] = strv_new("platform", "shutdown");
-        if (!sc->states[SLEEP_HIBERNATE])
+        if (!sc->states[SLEEP_HIBERNATE] ||
+            strv_length(sc->states[SLEEP_HIBERNATE]) == 0)
                 sc->states[SLEEP_HIBERNATE] = strv_new("disk");
-        if (!sc->modes[SLEEP_HYBRID_SLEEP])
+        if (!sc->modes[SLEEP_HYBRID_SLEEP] ||
+            strv_length(sc->modes[SLEEP_HYBRID_SLEEP]) == 0)
                 sc->modes[SLEEP_HYBRID_SLEEP] = strv_new("suspend", "platform", "shutdown");
-        if (!sc->states[SLEEP_HYBRID_SLEEP])
+        if (!sc->states[SLEEP_HYBRID_SLEEP] ||
+            strv_length(sc->states[SLEEP_HYBRID_SLEEP]) == 0)
                 sc->states[SLEEP_HYBRID_SLEEP] = strv_new("disk");
         if (sc->hibernate_delay_sec == 0)
                 sc->hibernate_delay_sec = 2 * USEC_PER_HOUR;
