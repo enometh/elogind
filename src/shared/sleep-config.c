@@ -62,6 +62,30 @@ static int PTR_TO_CAPACITY(void *p) {
         return capacity;
 }
 
+
+#include <stdio.h>
+void dump_strv(const char *, char**);
+
+// ;madhu 220227 - debug leak of Suspen
+
+void
+dump_strv(const char *msg, char **s)
+{
+        log_debug( "--------------------------------------");
+        log_debug( "MADHU STRV: %s", msg);
+        char **p = s; int i = 0;
+        if (p) {
+                do {
+                        log_debug("strv[%d]=%s", i++, *p++);
+                } while (*p && i < 20);
+                if (*p) log_debug("bailed after %d elements\n", i);
+        }
+        log_debug( "DONE\n");
+}
+
+static const char* const sleep_operation_table[] ;
+
+
 int parse_sleep_config(SleepConfig **ret_sleep_config) {
 #if 0 /// elogind uses its own manager
         _cleanup_(free_sleep_configp) SleepConfig *sc = NULL;
@@ -92,6 +116,12 @@ int parse_sleep_config(SleepConfig **ret_sleep_config) {
            strvs allocated by manager_parse_config_file */
 
         for (SleepOperation i = 0; i < _SLEEP_OPERATION_MAX; i++) {
+                char msg[256];
+                snprintf(msg, sizeof msg, "modes[%d] %s", i, sleep_operation_table[i]);
+                dump_strv(msg, sc->modes[i]);
+                snprintf(msg, sizeof msg, "states[%d] %s", i, sleep_operation_table[i]);
+                dump_strv(msg, sc->states[i]);
+
                 if (sc->modes[i]) {
                         strv_free(sc->modes[i]);
                         sc->modes[i] = strv_new(STRV_IGNORE);
@@ -690,6 +720,7 @@ int can_sleep_state(char **types) {
                 log_debug("Sleep mode \"%s\" is supported by the kernel.", found);
         else if (DEBUG_LOGGING) {
                 _cleanup_free_ char *t = strv_join(types, "/");
+                dump_strv("can_sleep_state: types", types);
                 log_debug("Sleep mode %s not supported by the kernel, sorry.", strnull(t));
         }
         return r;
@@ -741,6 +772,7 @@ int can_sleep_disk(char **types) {
 
         if (DEBUG_LOGGING) {
                 _cleanup_free_ char *t = strv_join(types, "/");
+                dump_strv("can_sleep_disk: types", types);
                 log_debug("Disk sleep mode %s not supported by the kernel, sorry.", strnull(t));
         }
         return false;
@@ -790,6 +822,7 @@ static int can_sleep_mem(char **types) {
 
         if (DEBUG_LOGGING) {
                 _cleanup_free_ char *t = strv_join(types, "/");
+                dump_strv("can_sleep_mem: types", types);
                 log_debug("Mem sleep mode %s not supported by the kernel, sorry.", strnull(t));
         }
         return false;
