@@ -330,6 +330,9 @@ int log_open(void) {
                         }
 
                         if (IN_SET(log_target,
+/* ;madhu 220228 elogind: syslog is not added unless LOG_TARGET_AUTO is present
+ */
+                                   LOG_TARGET_AUTO,
                                    LOG_TARGET_SYSLOG_OR_KMSG,
                                    LOG_TARGET_SYSLOG)) {
 
@@ -618,6 +621,13 @@ static int write_to_kmsg(
 
         if (kmsg_fd < 0)
                 return 0;
+
+        /* madhu 220228 printk already does the ratelimiting.  "printk: elogind: 637 output lines suppressed due to
+           ratelimiting" nobody sees this anyway */
+
+        /* madhu 220228 printk already does the ratelimiting.  "printk: elogind: 637 output lines suppressed due to
+           ratelimiting" nobody sees this anyway. If you want to see all messages then the log target has to be syslog,
+           not kmsg */
 
         if (ratelimit_kmsg && !ratelimit_below(&ratelimit)) {
                 if (ratelimit_num_dropped(&ratelimit) > 1)
