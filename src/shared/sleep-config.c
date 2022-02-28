@@ -121,6 +121,26 @@ static void sleep_config_validate_state_and_mode(SleepConfig *sc) {
                             sleep_operation_to_string(SLEEP_HIBERNATE), sleep_operation_to_string(SLEEP_HYBRID_SLEEP));
 }
 
+#include <stdio.h>
+void dump_strv(const char *, char**);
+
+// ;madhu 220227 - debug leak of Suspend.
+
+void
+dump_strv(const char *msg, char **s)
+{
+        log_debug( "--------------------------------------");
+        log_debug( "MADHU STRV: %s", msg);
+        char **p = s; int i = 0;
+        if (p) {
+                do {
+                        log_debug("strv[%d]=%s", i++, *p++);
+                } while (*p && i < 20);
+                if (*p) log_debug("bailed after %d elements\n", i);
+        }
+        log_debug( "DONE\n");
+}
+
 int parse_sleep_config(SleepConfig **ret) {
 #if 0 /// elogind uses its own manager
         _cleanup_(sleep_config_freep) SleepConfig *sc = NULL;
@@ -161,6 +181,12 @@ int parse_sleep_config(SleepConfig **ret) {
            strvs allocated by manager_parse_config_file */
 
         for (SleepOperation i = 0; i < _SLEEP_OPERATION_MAX; i++) {
+                char msg[256];
+                snprintf(msg, sizeof msg, "modes[%d] %s", i, sleep_operation_table[i]);
+                dump_strv(msg, sc->modes[i]);
+                snprintf(msg, sizeof msg, "states[%d] %s", i, sleep_operation_table[i]);
+                dump_strv(msg, sc->states[i]);
+
                 if (sc->modes[i]) {
                         strv_free(sc->modes[i]);
                         sc->modes[i] = strv_new(STRV_IGNORE);
@@ -291,6 +317,7 @@ int sleep_state_supported(char **states) {
 
         if (DEBUG_LOGGING) {
                 _cleanup_free_ char *joined = strv_join(states, " ");
+                dump_strv("sleep_state_supported: types", states);
                 log_debug("None of the configured sleep states are supported by kernel: %s", strnull(joined));
         }
         return false;
@@ -340,6 +367,7 @@ int sleep_mode_supported(char **modes) {
 
         if (DEBUG_LOGGING) {
                 _cleanup_free_ char *joined = strv_join(modes, " ");
+                dump_strv("sleep_mode_supported: types", modes);
                 log_debug("None of the configured hibernation power modes are supported by kernel: %s", strnull(joined));
         }
         return false;
@@ -393,6 +421,7 @@ static int suspend_mode_supported(char **modes) {
 
         if (DEBUG_LOGGING) {
                 _cleanup_free_ char *joined = strv_join(modes, " ");
+                dump_strv("suspend_mode_supported: types", modes);
                 log_debug("None of the configured suspend modes are supported by kernel: %s", strnull(joined));
         }
         return false;
