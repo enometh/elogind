@@ -207,6 +207,36 @@ static inline const char *strna(const char *s) {
         return s ?: "n/a";
 }
 
+// ;madhu 220809 fix %{public}X and %{private}X directives by removing
+// them
+
+char*
+fixwtfrelease(char *str, int *done)
+{
+	char *s, *p, *q, *r;
+	int mod = 0;
+	s = str;
+	while ((p = strstr(s, "%{public}")) != 0) {
+		mod++;
+		q = p + 9;
+		r = p+1;
+		while (*r++ = *q++);
+		s = p;
+	}
+	s = str;
+	while ((p = strstr(s, "%{private}")) != 0) {
+		mod++;
+		q = p + 10;
+		r = p+1;
+		while (*r++ = *q++);
+		s = p;
+	}
+	if (done) *done = mod;
+	return str;
+}
+
+
+
 
 _printf_(1, 0) static int
 fill_iovec_sprintf(const char *format, va_list ap, int extra, struct iovec **_iov)
@@ -245,18 +275,27 @@ fill_iovec_sprintf(const char *format, va_list ap, int extra, struct iovec **_io
 	}
 
 	va_copy(aq, ap);
-	if (vasprintf(&buffer, format, aq) < 0) {
+
+
+	int kludgep = strstr(format, "%{private}") || strstr(format, "%{public}");
+	char *format_fixed = kludgep ? fixwtfrelease(strdup(format), 0) : NULL;
+
+	if (vasprintf(&buffer, kludgep ? format_fixed : format , aq) < 0) {
 	    va_end(aq);
 	    r = -ENOMEM;
 	    goto fail;
 	}
+
+
 	va_end(aq);
 
-	VA_FORMAT_ADVANCE(format, ap);
+	VA_FORMAT_ADVANCE(kludgep ? format_fixed : format, ap);
 
 	(void) strstrip(buffer); /* strip trailing whitespace, keep prefixing whitespace */
 
 	iov[i++] = IOVEC_MAKE_STRING(buffer);
+
+	if (kludgep) free(format_fixed);
 
 	format = va_arg(ap, char *);
     }
