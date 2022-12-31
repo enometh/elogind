@@ -1800,9 +1800,9 @@ static int execute_shutdown_or_sleep(
         r = free_and_strdup(&m->action_job, p);
         if (r < 0)
                 goto error;
-#endif // 0
 
         m->delayed_action = a;
+#endif // 0
 
         /* Make sure the lid switch is ignored for a while */
         manager_set_lid_switch_ignore(m, usec_add(now(CLOCK_MONOTONIC), m->holdoff_timeout_usec));
