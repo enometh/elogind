@@ -2960,6 +2960,10 @@ install_data('LICENSE.GPL2',
 #endif // 0
 install_emptydir(elogindstatedir)
 
+#if 1 /// some package sytems like portage might strip empty directories created for elogind
+meson.add_install_script('sh', '-c', 'touch $DESTDIR@0@/.keep_dir'.format(elogindstatedir))
+#endif //1
+
 ############################################################
 
 # Ensure that changes to the docs/ directory do not break the
