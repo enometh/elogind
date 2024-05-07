@@ -748,7 +748,7 @@ static int session_start_cgroup(Session *s) {
 
         assert(s);
         assert(s->user);
-        assert(s->leader.pid > 0);
+        assert(s->leader.pid >= 0);
 
         /* First, create our own group */
         r = cg_create(SYSTEMD_CGROUP_CONTROLLER, s->id);
