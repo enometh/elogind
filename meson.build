@@ -147,7 +147,7 @@ datadir = prefixdir / get_option('datadir')
 # libexecdir = prefixdir / 'lib/systemd'
 #else // 0
 localstatedir = get_option('localstatedir')
-localstatedir = localstatedir != '' ? localstatedir : '/var'
+localstatedir = localstatedir != '' ? localstatedir : '/var/lib'
 
 libexecdir = get_option('libexecdir')
 if libexecdir != '' and not fs.is_absolute(libexecdir)
@@ -243,7 +243,7 @@ udevlibexecdir = get_option('udevbindir')
 udevlibexecdir = udevlibexecdir != '' ? udevlibexecdir : prefixdir / 'lib/udev'
 udevrulesdir = get_option('udevrulesdir')
 udevrulesdir = udevrulesdir != '' ? udevrulesdir : udevlibexecdir / 'rules.d'
-elogindstatedir = localstatedir / 'lib/elogind'
+elogindstatedir = localstatedir / 'elogind'
 factorydir = datadir / 'factory'
 configfiledir = get_option('configfiledir')
 if configfiledir == ''
