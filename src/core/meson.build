@@ -243,6 +243,11 @@ libcore_sources = files(
 #endif // 0
 install_emptydir(systemshutdowndir)
 install_emptydir(systemsleepdir)
+#if 1 /// some package sytems like portage might strip empty directories created for elogind
+meson.add_install_script('sh', '-c', 'touch $DESTDIR@0@/.keep_dir'.format(systemshutdowndir))
+meson.add_install_script('sh', '-c', 'touch $DESTDIR@0@/.keep_dir'.format(systemsleepdir))
+#endif
+
 #if 0 /// UNNEEDED by elogind
 # install_emptydir(systemgeneratordir)
 # install_emptydir(usergeneratordir)
