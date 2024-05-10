@@ -1484,7 +1484,7 @@ int session_kill(Session *s, KillWho who, int signo) {
                 return 0;
         } else
                 // const char *path, int sig, CGroupFlags flags, Set *s, cg_kill_log_func_t kill_log, void *userdata
-                return cg_kill_recursive (SYSTEMD_CGROUP_CONTROLLER, signo,
+                return cg_kill_recursive (s->id, signo,
                                           CGROUP_IGNORE_SELF | CGROUP_REMOVE,
                                           NULL, NULL, NULL);
 #endif // 0
